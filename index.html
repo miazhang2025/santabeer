@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Real Taste, No Acting Required — Case Study</title>
+<link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Special+Elite&family=Raleway:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #0a0a0f;
+    --deep: #12101a;
+    --red: #c0392b;
+    --red-bright: #e74c3c;
+    --green: #1a3a2a;
+    --green-bright: #2ecc71;
+    --cream: #f5f0e8;
+    --grey: #8a8a9a;
+    --white: #fafafa;
+    --stripe: rgba(255,255,255,0.03);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background-color: var(--black);
+    color: var(--cream);
+    font-family: 'Special Elite', cursive;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom cursor */
+  .cursor {
+    width: 16px; height: 16px;
+    background: var(--red);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s ease, background 0.2s;
+    mix-blend-mode: difference;
+  }
+
+  /* Noise texture overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9998;
+    opacity: 0.4;
+  }
+
+  /* Snowfall */
+  .snow-container {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    overflow: hidden;
+  }
+  .snowflake {
+    position: absolute;
+    top: -10px;
+    color: rgba(255,255,255,0.6);
+    font-size: 1em;
+    animation: fall linear infinite;
+    user-select: none;
+  }
+  @keyframes fall {
+    to { transform: translateY(105vh) rotate(360deg); opacity: 0; }
+  }
+
+  /* ─── HERO ─── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    text-align: center;
+    padding: 60px 20px;
+    background:
+      radial-gradient(ellipse at 20% 50%, rgba(192,57,43,0.15) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 30%, rgba(26,58,42,0.2) 0%, transparent 60%),
+      var(--black);
+  }
+
+  .hero-eyebrow {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 300;
+    font-size: 0.75rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 24px;
+    animation: fadeUp 1s ease both;
+  }
+
+  .hero-title {
+    font-family: 'Abril Fatface', serif;
+    font-size: clamp(3rem, 10vw, 8rem);
+    line-height: 0.9;
+    color: var(--cream);
+    text-shadow:
+      4px 4px 0 var(--red),
+      8px 8px 0 rgba(192,57,43,0.3);
+    animation: fadeUp 1s 0.2s ease both;
+    max-width: 900px;
+  }
+
+  .hero-title em {
+    font-style: italic;
+    color: var(--red-bright);
+    display: block;
+    font-size: 0.65em;
+  }
+
+  .hero-sub {
+    margin-top: 32px;
+    font-size: 1rem;
+    color: var(--grey);
+    letter-spacing: 0.1em;
+    animation: fadeUp 1s 0.4s ease both;
+  }
+
+  .hero-meta {
+    margin-top: 48px;
+    display: flex;
+    gap: 40px;
+    justify-content: center;
+    animation: fadeUp 1s 0.6s ease both;
+  }
+
+  .hero-meta-item {
+    text-align: center;
+  }
+
+  .hero-meta-item .label {
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--grey);
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  .hero-meta-item .value {
+    font-size: 1rem;
+    color: var(--cream);
+  }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    color: var(--grey);
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    animation: fadeUp 1s 1s ease both;
+  }
+
+  .scroll-line {
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(to bottom, var(--red), transparent);
+    animation: scrollPulse 2s ease-in-out infinite;
+  }
+
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 0.3; transform: scaleY(1); }
+    50% { opacity: 1; transform: scaleY(1.2); }
+  }
+
+  /* ─── SECTION BASE ─── */
+  section {
+    position: relative;
+    z-index: 2;
+  }
+
+  .container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+
+  .section-label {
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--red);
+    display: block;
+    margin-bottom: 16px;
+  }
+
+  .section-title {
+    font-family: 'Abril Fatface', serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    color: var(--cream);
+    line-height: 1.1;
+    margin-bottom: 32px;
+  }
+
+  .body-text {
+    font-size: 1.05rem;
+    line-height: 1.85;
+    color: #c8c0b0;
+    max-width: 680px;
+  }
+
+  .body-text + .body-text {
+    margin-top: 20px;
+  }
+
+  /* ─── CONCEPT ─── */
+  .concept {
+    padding: 120px 0;
+    background: var(--deep);
+    border-top: 1px solid rgba(255,255,255,0.05);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+
+  .concept-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: start;
+    margin-top: 60px;
+  }
+
+  .concept-quote {
+    font-family: 'Abril Fatface', serif;
+    font-size: clamp(1.4rem, 3vw, 2rem);
+    color: var(--cream);
+    line-height: 1.3;
+    border-left: 3px solid var(--red);
+    padding-left: 24px;
+    position: relative;
+  }
+
+  .concept-quote::before {
+    content: '"';
+    font-size: 6rem;
+    color: rgba(192,57,43,0.15);
+    position: absolute;
+    top: -20px;
+    left: -20px;
+    font-family: 'Abril Fatface', serif;
+    line-height: 1;
+  }
+
+  /* ─── VIDEO ─── */
+  .video-section {
+    padding: 120px 0;
+    text-align: center;
+  }
+
+  .video-wrapper {
+    margin-top: 48px;
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    max-width: 800px;
+  }
+
+  .video-frame {
+    width: 100%;
+    aspect-ratio: 16/9;
+    background: #1a1a2a;
+    border: 1px solid rgba(192,57,43,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .video-frame::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      repeating-linear-gradient(
+        0deg,
+        var(--stripe) 0px,
+        var(--stripe) 1px,
+        transparent 1px,
+        transparent 4px
+      );
+    pointer-events: none;
+  }
+
+  .video-placeholder {
+    text-align: center;
+    z-index: 1;
+  }
+
+  .play-btn {
+    width: 80px; height: 80px;
+    border: 2px solid var(--red);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+    transition: all 0.3s;
+    cursor: pointer;
+  }
+
+  .play-btn:hover {
+    background: var(--red);
+    transform: scale(1.1);
+  }
+
+  .play-btn svg { width: 28px; fill: var(--cream); margin-left: 4px; }
+
+  .video-placeholder p {
+    color: var(--grey);
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.8rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
+  .video-corner {
+    position: absolute;
+    width: 20px; height: 20px;
+    border-color: var(--red);
+    border-style: solid;
+  }
+  .video-corner.tl { top: -1px; left: -1px; border-width: 2px 0 0 2px; }
+  .video-corner.tr { top: -1px; right: -1px; border-width: 2px 2px 0 0; }
+  .video-corner.bl { bottom: -1px; left: -1px; border-width: 0 0 2px 2px; }
+  .video-corner.br { bottom: -1px; right: -1px; border-width: 0 2px 2px 0; }
+
+  /* ─── PIPELINE ─── */
+  .pipeline {
+    padding: 120px 0;
+    background: var(--deep);
+  }
+
+  .pipeline-steps {
+    margin-top: 64px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .step {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 32px;
+    padding: 40px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    position: relative;
+    transition: all 0.3s;
+  }
+
+  .step:hover {
+    background: rgba(192,57,43,0.03);
+    padding-left: 12px;
+    padding-right: 12px;
+    border-radius: 4px;
+  }
+
+  .step:first-child { border-top: 1px solid rgba(255,255,255,0.06); }
+
+  .step-number {
+    font-family: 'Abril Fatface', serif;
+    font-size: 3rem;
+    color: rgba(192,57,43,0.2);
+    line-height: 1;
+    padding-top: 4px;
+    transition: color 0.3s;
+  }
+
+  .step:hover .step-number { color: rgba(192,57,43,0.5); }
+
+  .step-content {}
+
+  .step-tools {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .tool-tag {
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border: 1px solid rgba(192,57,43,0.4);
+    color: var(--red-bright);
+    border-radius: 2px;
+  }
+
+  .step-title {
+    font-family: 'Abril Fatface', serif;
+    font-size: 1.4rem;
+    color: var(--cream);
+    margin-bottom: 10px;
+  }
+
+  .step-desc {
+    font-size: 0.95rem;
+    line-height: 1.75;
+    color: #a0988a;
+  }
+
+  /* ─── CHALLENGE ─── */
+  .challenge {
+    padding: 120px 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .challenge::before {
+    content: 'STUCK';
+    position: absolute;
+    font-family: 'Abril Fatface', serif;
+    font-size: 20vw;
+    color: rgba(192,57,43,0.04);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    white-space: nowrap;
+    pointer-events: none;
+  }
+
+  .challenge-card {
+    background: rgba(192,57,43,0.06);
+    border: 1px solid rgba(192,57,43,0.2);
+    border-radius: 4px;
+    padding: 48px;
+    margin-top: 48px;
+    position: relative;
+  }
+
+  .challenge-card::before {
+    content: '⚠';
+    position: absolute;
+    top: -16px;
+    left: 48px;
+    background: var(--red);
+    width: 32px; height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    border-radius: 2px;
+  }
+
+  .challenge-title {
+    font-family: 'Abril Fatface', serif;
+    font-size: 1.6rem;
+    color: var(--cream);
+    margin-bottom: 20px;
+  }
+
+  .challenge-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 28px;
+  }
+
+  .challenge-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .challenge-step-num {
+    font-family: 'Abril Fatface', serif;
+    color: var(--red);
+    font-size: 1.2rem;
+    min-width: 24px;
+    padding-top: 2px;
+  }
+
+  .challenge-step-text {
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: #b0a898;
+  }
+
+  /* ─── TOOLS GRID ─── */
+  .tools-section {
+    padding: 120px 0;
+    background: var(--deep);
+  }
+
+  .tools-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 2px;
+    margin-top: 56px;
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .tool-cell {
+    padding: 28px 24px;
+    border: 1px solid rgba(255,255,255,0.04);
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .tool-cell::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 0; height: 2px;
+    background: var(--red);
+    transition: width 0.3s;
+  }
+
+  .tool-cell:hover::after { width: 100%; }
+  .tool-cell:hover { background: rgba(192,57,43,0.05); }
+
+  .tool-cell-name {
+    font-family: 'Abril Fatface', serif;
+    font-size: 1.1rem;
+    color: var(--cream);
+    margin-bottom: 6px;
+  }
+
+  .tool-cell-role {
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.72rem;
+    color: var(--grey);
+    letter-spacing: 0.05em;
+    line-height: 1.5;
+  }
+
+  /* ─── CREDITS ─── */
+  .credits {
+    padding: 120px 0 80px;
+    text-align: center;
+  }
+
+  .credits-title {
+    font-family: 'Abril Fatface', serif;
+    font-size: clamp(2.5rem, 8vw, 6rem);
+    color: var(--cream);
+    line-height: 1;
+    text-shadow: 3px 3px 0 var(--red);
+    margin-bottom: 8px;
+  }
+
+  .credits-names {
+    font-family: 'Special Elite', cursive;
+    font-size: 1.2rem;
+    color: var(--grey);
+    margin-bottom: 48px;
+    letter-spacing: 0.1em;
+  }
+
+  .credits-divider {
+    width: 60px;
+    height: 1px;
+    background: var(--red);
+    margin: 32px auto;
+  }
+
+  .credits-festival {
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--grey);
+  }
+
+  /* ─── DECORATIVE ELEMENTS ─── */
+  .holly {
+    display: inline-block;
+    color: var(--red);
+    margin: 0 8px;
+    animation: sway 3s ease-in-out infinite;
+  }
+
+  @keyframes sway {
+    0%, 100% { transform: rotate(-5deg); }
+    50% { transform: rotate(5deg); }
+  }
+
+  /* ─── ANIMATIONS ─── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ─── DECORATIVE SPIDERS / CURLS ─── */
+  .deco-line {
+    display: block;
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(192,57,43,0.3), transparent);
+    margin: 0;
+  }
+
+  /* ─── MOBILE ─── */
+  @media (max-width: 640px) {
+    .concept-grid { grid-template-columns: 1fr; gap: 40px; }
+    .step { grid-template-columns: 48px 1fr; gap: 16px; }
+    .challenge-card { padding: 32px 24px; }
+    .hero-meta { flex-direction: column; gap: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+
+<!-- Snowfall -->
+<div class="snow-container" id="snow"></div>
+
+<!-- ─── HERO ─── -->
+<section class="hero">
+  <p class="hero-eyebrow"><span class="holly">✦</span> AIF 2026 — Advertising <span class="holly">✦</span></p>
+  <h1 class="hero-title">
+    Real Taste,
+    <em>No Acting Required.</em>
+  </h1>
+  <p class="hero-sub">A spec beer advertisement — AI-assisted production</p>
+
+  <div class="hero-meta">
+    <div class="hero-meta-item">
+      <span class="label">Team</span>
+      <span class="value">Mia & Ingrid</span>
+    </div>
+    <div class="hero-meta-item">
+      <span class="label">Duration</span>
+      <span class="value">One Week</span>
+    </div>
+    <div class="hero-meta-item">
+      <span class="label">Style</span>
+      <span class="value">Clay Stop-Motion</span>
+    </div>
+    <div class="hero-meta-item">
+      <span class="label">Category</span>
+      <span class="value">Advertising</span>
+    </div>
+  </div>
+
+  <div class="scroll-hint">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<span class="deco-line"></span>
+
+<!-- ─── VIDEO ─── -->
+<section class="video-section">
+  <div class="container">
+    <span class="section-label reveal">The Film</span>
+    <h2 class="section-title reveal">Watch the Ad</h2>
+
+    <div class="video-wrapper reveal">
+      <div class="video-frame" id="videoFrame">
+        <div class="video-corner tl"></div>
+        <div class="video-corner tr"></div>
+        <div class="video-corner bl"></div>
+        <div class="video-corner br"></div>
+        <div class="video-placeholder">
+          <div class="play-btn" onclick="alert('Replace this with your video embed link')">
+            <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+          <p>Insert video link here</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<span class="deco-line"></span>
+
+<!-- ─── CONCEPT ─── -->
+<section class="concept">
+  <div class="container">
+    <span class="section-label reveal">The Idea</span>
+    <h2 class="section-title reveal">A Joke Hidden Inside an Ad<br>Hidden Inside a Joke.</h2>
+
+    <div class="concept-grid">
+      <div class="reveal">
+        <div class="concept-quote">
+          Weight-loss brands hire two different people to fake "before and after." We made that the punchline.
+        </div>
+      </div>
+      <div class="reveal">
+        <p class="body-text">
+          The concept came from a simple cultural observation: pharmaceutical and wellness ads routinely cast two actors to manufacture transformation — a quiet deception dressed up as inspiration.
+        </p>
+        <p class="body-text" style="margin-top:20px;">
+          We pushed that convention to its most absurd extreme — Santa Claus, of all people, getting an Ozempic glow-up — then pulled the curtain back. The real punchline isn't the slim Santa. It's two exhausted actors sharing a cold beer in a parking lot after the shoot. <em>Good products don't need performance. Genuine happiness doesn't either.</em>
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<span class="deco-line"></span>
+
+<!-- ─── PIPELINE ─── -->
+<section class="pipeline">
+  <div class="container">
+    <span class="section-label reveal">How We Made It</span>
+    <h2 class="section-title reveal">The Pipeline</h2>
+
+    <div class="pipeline-steps">
+
+      <div class="step reveal">
+        <div class="step-number">01</div>
+        <div class="step-content">
+          <div class="step-tools">
+            <span class="tool-tag">TapNow</span>
+          </div>
+          <div class="step-title">Storyboard & Shot Planning</div>
+          <p class="step-desc">Before generating a single frame, we planned the full shot list in TapNow — compositions, camera logic, timing of the meta-reveal. Locking the narrative structure early prevented costly generation detours later.</p>
+        </div>
+      </div>
+
+      <div class="step reveal">
+        <div class="step-number">02</div>
+        <div class="step-content">
+          <div class="step-tools">
+            <span class="tool-tag">ComfyUI</span>
+            <span class="tool-tag">Nano Banana</span>
+          </div>
+          <div class="step-title">Style Lock & Character Design</div>
+          <p class="step-desc">We established a clay stop-motion aesthetic — warm, handmade, slightly uncanny — as a deliberate counterpoint to the ad's cold irony. Locking character references in ComfyUI and Nano Banana before video generation was essential for consistency across every shot.</p>
+        </div>
+      </div>
+
+      <div class="step reveal">
+        <div class="step-number">03</div>
+        <div class="step-content">
+          <div class="step-tools">
+            <span class="tool-tag">Claude</span>
+            <span class="tool-tag">Gemini</span>
+          </div>
+          <div class="step-title">Script & Prompt Engineering</div>
+          <p class="step-desc">Claude and Gemini were used to refine shot descriptions, sharpen prompt language for each scene, and iterate on the final punchline until it landed without over-explaining. The tagline — <em>Real Taste, No Acting Required</em> — went through multiple passes before it felt inevitable.</p>
+        </div>
+      </div>
+
+      <div class="step reveal">
+        <div class="step-number">04</div>
+        <div class="step-content">
+          <div class="step-tools">
+            <span class="tool-tag">Nano Banana</span>
+            <span class="tool-tag">Kling</span>
+            <span class="tool-tag">Runway Gen-4</span>
+          </div>
+          <div class="step-title">Keyframe-First Video Generation</div>
+          <p class="step-desc">Rather than prompting video cold, we generated key frames in Nano Banana first, then iterated to produce refined intermediate frames. These served as anchors for Kling and Runway — which generated full motion sequences between them. This approach gave us significantly more control over character continuity and motion than starting from text alone.</p>
+        </div>
+      </div>
+
+      <div class="step reveal">
+        <div class="step-number">05</div>
+        <div class="step-content">
+          <div class="step-tools">
+            <span class="tool-tag">ElevenLabs</span>
+            <span class="tool-tag">Premiere Pro</span>
+          </div>
+          <div class="step-title">Audio & Final Edit</div>
+          <p class="step-desc">A rough cut was assembled first, then ElevenLabs generated character voices and key ambient audio against that edit. Final integration and polish happened in Premiere Pro — with the rough cut informing every audio decision rather than working the other way around.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<span class="deco-line"></span>
+
+<!-- ─── CHALLENGE ─── -->
+<section class="challenge">
+  <div class="container">
+    <span class="section-label reveal">The Hard Part</span>
+    <h2 class="section-title reveal">When Santa Gets Stuck,<br>So Does the Prompt.</h2>
+
+    <div class="challenge-card reveal">
+      <div class="challenge-title">The Chimney Shot</div>
+      <p class="body-text">
+        The cross-section shot of Santa wedged in the chimney — the visual anchor of the entire ad's premise — refused to generate cleanly. Every prompt combination produced something wrong: wrong angle, wrong proportions, missing the black comedy of the situation.
+      </p>
+
+      <div class="challenge-steps">
+        <div class="challenge-step">
+          <span class="challenge-step-num">✕</span>
+          <p class="challenge-step-text">Attempted direct text-to-video prompting across multiple iterations — no prompt produced a usable cross-section view.</p>
+        </div>
+        <div class="challenge-step">
+          <span class="challenge-step-num">→</span>
+          <p class="challenge-step-text">Built a precise reference illustration in Photoshop — a hybrid human-AI workflow, drawing the exact geometry and proportions manually.</p>
+        </div>
+        <div class="challenge-step">
+          <span class="challenge-step-num">✓</span>
+          <p class="challenge-step-text">Used the Photoshop illustration as a generation anchor. The result became one of the most visually distinctive frames in the piece.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<span class="deco-line"></span>
+
+<!-- ─── TOOLS ─── -->
+<section class="tools-section">
+  <div class="container">
+    <span class="section-label reveal">Full Stack</span>
+    <h2 class="section-title reveal">Tools Used</h2>
+
+    <div class="tools-grid reveal">
+      <div class="tool-cell">
+        <div class="tool-cell-name">TapNow</div>
+        <div class="tool-cell-role">AI storyboarding & shot planning</div>
+      </div>
+      <div class="tool-cell">
+        <div class="tool-cell-name">ComfyUI</div>
+        <div class="tool-cell-role">Style development & visual reference</div>
+      </div>
+      <div class="tool-cell">
+        <div class="tool-cell-name">Nano Banana</div>
+        <div class="tool-cell-role">Character design & keyframe generation</div>
+      </div>
+      <div class="tool-cell">
+        <div class="tool-cell-name">Claude</div>
+        <div class="tool-cell-role">Script refinement & prompt engineering</div>
+      </div>
+      <div class="tool-cell">
+        <div class="tool-cell-name">Gemini</div>
+        <div class="tool-cell-role">Concept iteration & dialogue</div>
+      </div>
+      <div class="tool-cell">
+        <div class="tool-cell-name">Kling</div>
+        <div class="tool-cell-role">Video generation from reference frames</div>
+      </div>
+      <div class="tool-cell">
+        <div class="tool-cell-name">Runway Gen-4</div>
+        <div class="tool-cell-role">Video generation & motion sequences</div>
+      </div>
+      <div class="tool-cell">
+        <div class="tool-cell-name">ElevenLabs</div>
+        <div class="tool-cell-role">Voice synthesis & ambient audio</div>
+      </div>
+      <div class="tool-cell">
+        <div class="tool-cell-name">Photoshop</div>
+        <div class="tool-cell-role">Hybrid problem-solving & reference art</div>
+      </div>
+      <div class="tool-cell">
+        <div class="tool-cell-name">Premiere Pro</div>
+        <div class="tool-cell-role">Assembly, rough cut & final edit</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<span class="deco-line"></span>
+
+<!-- ─── CREDITS ─── -->
+<section class="credits">
+  <div class="container">
+    <div class="reveal">
+      <p class="credits-names">Mia & Ingrid</p>
+      <h2 class="credits-title">Real Taste,<br>No Acting Required.</h2>
+      <div class="credits-divider"></div>
+      <p class="credits-festival">Runway AI Festival 2026 — Advertising Category</p>
+    </div>
+  </div>
+</section>
+
+<script>
+  // Cursor
+  const cursor = document.getElementById('cursor');
+  document.addEventListener('mousemove', e => {
+    cursor.style.left = e.clientX + 'px';
+    cursor.style.top = e.clientY + 'px';
+  });
+
+  // Snowfall
+  const snow = document.getElementById('snow');
+  const chars = ['❄', '❅', '❆', '·', '•'];
+  for (let i = 0; i < 40; i++) {
+    const flake = document.createElement('span');
+    flake.className = 'snowflake';
+    flake.textContent = chars[Math.floor(Math.random() * chars.length)];
+    flake.style.left = Math.random() * 100 + 'vw';
+    flake.style.fontSize = (0.6 + Math.random() * 1.2) + 'em';
+    flake.style.opacity = 0.2 + Math.random() * 0.5;
+    flake.style.animationDuration = (6 + Math.random() * 14) + 's';
+    flake.style.animationDelay = (-Math.random() * 20) + 's';
+    snow.appendChild(flake);
+  }
+
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 80);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
