@@ -4,936 +4,596 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Real Taste, No Acting Required — Case Study</title>
-<link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Special+Elite&family=Raleway:wght@300;400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Mountains+of+Christmas:wght@400;700&family=Special+Elite&family=Raleway:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
 <style>
   :root {
-    --black: #0a0a0f;
-    --deep: #12101a;
-    --red: #c0392b;
-    --red-bright: #e74c3c;
-    --green: #1a3a2a;
-    --green-bright: #2ecc71;
-    --cream: #f5f0e8;
-    --grey: #8a8a9a;
-    --white: #fafafa;
-    --stripe: rgba(255,255,255,0.03);
+    --black: #09090e;
+    --deep: #111018;
+    --red: #b03020;
+    --red-dim: rgba(176,48,32,0.15);
+    --accent: #e03020;
+    --cream: #f0e8d8;
+    --muted: #7a7268;
+    --border: rgba(240,232,216,0.08);
   }
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  html { scroll-behavior: smooth; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
 
   body {
-    background-color: var(--black);
+    background: var(--black);
     color: var(--cream);
     font-family: 'Special Elite', cursive;
     overflow-x: hidden;
     cursor: none;
   }
 
-  /* Custom cursor */
   .cursor {
-    width: 16px; height: 16px;
+    width:12px; height:12px;
     background: var(--red);
-    border-radius: 50%;
-    position: fixed;
-    pointer-events: none;
-    z-index: 9999;
-    transform: translate(-50%, -50%);
-    transition: transform 0.1s ease, background 0.2s;
-    mix-blend-mode: difference;
+    border-radius:50%;
+    position:fixed; pointer-events:none; z-index:9999;
+    transform:translate(-50%,-50%);
+    transition: transform .08s;
   }
 
-  /* Noise texture overlay */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E");
-    pointer-events: none;
-    z-index: 9998;
-    opacity: 0.4;
+  body::after {
+    content:''; position:fixed; inset:0;
+    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events:none; z-index:9990; opacity:.5;
   }
 
-  /* Snowfall */
-  .snow-container {
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    z-index: 1;
-    overflow: hidden;
-  }
-  .snowflake {
-    position: absolute;
-    top: -10px;
-    color: rgba(255,255,255,0.6);
-    font-size: 1em;
-    animation: fall linear infinite;
-    user-select: none;
-  }
-  @keyframes fall {
-    to { transform: translateY(105vh) rotate(360deg); opacity: 0; }
-  }
+  .snow { position:fixed; inset:0; pointer-events:none; z-index:1; overflow:hidden; }
+  .flake { position:absolute; top:-20px; color:rgba(255,255,255,.4); animation:fall linear infinite; user-select:none; }
+  @keyframes fall { to { transform:translateY(110vh) rotate(720deg); opacity:0; } }
 
-  /* ─── HERO ─── */
+  /* HERO */
   .hero {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    text-align: center;
-    padding: 60px 20px;
+    min-height:100vh; display:flex; flex-direction:column;
+    align-items:center; justify-content:center;
+    text-align:center; padding:80px 24px 100px; position:relative;
     background:
-      radial-gradient(ellipse at 20% 50%, rgba(192,57,43,0.15) 0%, transparent 60%),
-      radial-gradient(ellipse at 80% 30%, rgba(26,58,42,0.2) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 50% at 15% 60%, rgba(176,48,32,.12) 0%, transparent 70%),
+      radial-gradient(ellipse 50% 40% at 85% 30%, rgba(176,48,32,.08) 0%, transparent 70%),
       var(--black);
   }
 
-  .hero-eyebrow {
-    font-family: 'Raleway', sans-serif;
-    font-weight: 300;
-    font-size: 0.75rem;
-    letter-spacing: 0.4em;
-    text-transform: uppercase;
-    color: var(--red);
-    margin-bottom: 24px;
-    animation: fadeUp 1s ease both;
+  .eyebrow {
+    font-family:'Raleway',sans-serif; font-size:.65rem; letter-spacing:.45em; text-transform:uppercase;
+    color:var(--red); margin-bottom:28px; animation:up 1s ease both;
   }
 
   .hero-title {
-    font-family: 'Abril Fatface', serif;
-    font-size: clamp(3rem, 10vw, 8rem);
-    line-height: 0.9;
-    color: var(--cream);
-    text-shadow:
-      4px 4px 0 var(--red),
-      8px 8px 0 rgba(192,57,43,0.3);
-    animation: fadeUp 1s 0.2s ease both;
-    max-width: 900px;
+    font-family:'Mountains of Christmas',cursive;
+    font-size:clamp(3.2rem,10vw,8.5rem); line-height:.88;
+    color:var(--cream); text-shadow:3px 3px 0 var(--red), 7px 7px 0 rgba(176,48,32,.25);
+    animation:up 1s .15s ease both; max-width:960px;
   }
 
   .hero-title em {
-    font-style: italic;
-    color: var(--red-bright);
-    display: block;
-    font-size: 0.65em;
+    display:block; font-style:italic; color:var(--red); font-size:.6em;
+    text-shadow:2px 2px 0 rgba(176,48,32,.3);
   }
 
   .hero-sub {
-    margin-top: 32px;
-    font-size: 1rem;
-    color: var(--grey);
-    letter-spacing: 0.1em;
-    animation: fadeUp 1s 0.4s ease both;
+    margin-top:36px; font-family:'Raleway',sans-serif; font-size:.85rem;
+    color:var(--muted); letter-spacing:.12em; animation:up 1s .3s ease both;
   }
 
-  .hero-meta {
-    margin-top: 48px;
-    display: flex;
-    gap: 40px;
-    justify-content: center;
-    animation: fadeUp 1s 0.6s ease both;
+  .hero-chips {
+    margin-top:48px; display:flex; gap:12px; flex-wrap:wrap; justify-content:center;
+    animation:up 1s .45s ease both;
   }
 
-  .hero-meta-item {
-    text-align: center;
-  }
-
-  .hero-meta-item .label {
-    font-family: 'Raleway', sans-serif;
-    font-size: 0.65rem;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    color: var(--grey);
-    display: block;
-    margin-bottom: 4px;
-  }
-
-  .hero-meta-item .value {
-    font-size: 1rem;
-    color: var(--cream);
+  .chip {
+    font-family:'Raleway',sans-serif; font-size:.6rem; letter-spacing:.25em; text-transform:uppercase;
+    padding:6px 16px; border:1px solid rgba(240,232,216,.15); color:var(--muted); border-radius:2px;
   }
 
   .scroll-hint {
-    position: absolute;
-    bottom: 40px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    color: var(--grey);
-    font-family: 'Raleway', sans-serif;
-    font-size: 0.65rem;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    animation: fadeUp 1s 1s ease both;
+    position:absolute; bottom:44px; left:50%; transform:translateX(-50%);
+    display:flex; flex-direction:column; align-items:center; gap:10px; color:var(--muted);
+    font-family:'Raleway',sans-serif; font-size:.6rem; letter-spacing:.3em; text-transform:uppercase;
+    animation:up 1s .9s ease both;
+  }
+  .scroll-line { width:1px; height:44px; background:linear-gradient(to bottom,var(--red),transparent); animation:pulse 2.2s ease-in-out infinite; }
+  @keyframes pulse { 0%,100%{opacity:.3} 50%{opacity:1} }
+
+  /* SECTIONS */
+  section { position:relative; z-index:2; }
+  .wrap { max-width:960px; margin:0 auto; padding:0 32px; }
+
+  .sec-label {
+    font-family:'Raleway',sans-serif; font-size:.62rem; letter-spacing:.4em; text-transform:uppercase;
+    color:var(--red); display:block; margin-bottom:14px;
   }
 
-  .scroll-line {
-    width: 1px;
-    height: 40px;
-    background: linear-gradient(to bottom, var(--red), transparent);
-    animation: scrollPulse 2s ease-in-out infinite;
+  .sec-title {
+    font-family:'Abril Fatface',serif; font-size:clamp(2rem,5vw,3.2rem);
+    color:var(--cream); line-height:1.05; margin-bottom:36px;
   }
 
-  @keyframes scrollPulse {
-    0%, 100% { opacity: 0.3; transform: scaleY(1); }
-    50% { opacity: 1; transform: scaleY(1.2); }
+  .prose { font-size:1rem; line-height:1.9; color:#b0a898; max-width:720px; }
+  .prose + .prose { margin-top:22px; }
+  .prose em { color:var(--cream); font-style:italic; }
+
+  .rule { width:100%; height:1px; background:linear-gradient(to right,transparent,rgba(240,232,216,.08),transparent); }
+
+  /* VIDEO */
+  .video-sec { padding:120px 0; text-align:center; }
+
+  .vframe {
+    margin:48px auto 0; max-width:820px; width:100%;
+    aspect-ratio:16/9; background:#141020;
+    border:1px solid rgba(176,48,32,.25); position:relative; overflow:hidden;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .vframe::before {
+    content:''; position:absolute; inset:0;
+    background:repeating-linear-gradient(0deg,rgba(255,255,255,.015) 0,rgba(255,255,255,.015) 1px,transparent 1px,transparent 5px);
+    pointer-events:none;
   }
 
-  /* ─── SECTION BASE ─── */
-  section {
-    position: relative;
-    z-index: 2;
+  .vcorner { position:absolute; width:18px; height:18px; border-color:var(--red); border-style:solid; }
+  .vcorner.tl{top:-1px;left:-1px;border-width:2px 0 0 2px}
+  .vcorner.tr{top:-1px;right:-1px;border-width:2px 2px 0 0}
+  .vcorner.bl{bottom:-1px;left:-1px;border-width:0 0 2px 2px}
+  .vcorner.br{bottom:-1px;right:-1px;border-width:0 2px 2px 0}
+
+  .play {
+    width:72px; height:72px; border:1.5px solid var(--red); border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer; transition:all .3s; z-index:1;
+  }
+  .play:hover { background:var(--red); transform:scale(1.1); }
+  .play svg { width:24px; fill:var(--cream); margin-left:4px; }
+  .vhint { margin-top:14px; font-family:'Raleway',sans-serif; font-size:.7rem; letter-spacing:.2em; text-transform:uppercase; color:var(--muted); }
+
+  /* IDEA */
+  .idea { padding:120px 0; background:var(--deep); }
+  .idea-grid { display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:start; margin-top:56px; }
+
+  .pullquote {
+    font-family:'Abril Fatface',serif; font-size:clamp(1.3rem,2.5vw,1.8rem);
+    color:var(--cream); line-height:1.35;
+    border-left:2px solid var(--red); padding-left:24px; position:relative;
+  }
+  .pullquote::before {
+    content:'"'; font-size:5rem; color:var(--red-dim);
+    position:absolute; top:-16px; left:-8px;
+    font-family:'Abril Fatface',serif; line-height:1;
   }
 
-  .container {
-    max-width: 960px;
-    margin: 0 auto;
-    padding: 0 32px;
+  /* AI SECTION */
+  .ai-sec { padding:120px 0; }
+
+  .ai-card {
+    margin-top:48px; background:rgba(176,48,32,.05);
+    border:1px solid rgba(176,48,32,.2); border-radius:3px; padding:48px;
   }
 
-  .section-label {
-    font-family: 'Raleway', sans-serif;
-    font-size: 0.65rem;
-    letter-spacing: 0.4em;
-    text-transform: uppercase;
-    color: var(--red);
-    display: block;
-    margin-bottom: 16px;
+  .ai-card-title {
+    font-family:'Abril Fatface',serif; font-size:1.3rem; color:var(--red); margin-bottom:18px;
   }
 
-  .section-title {
-    font-family: 'Abril Fatface', serif;
-    font-size: clamp(2rem, 5vw, 3.5rem);
-    color: var(--cream);
-    line-height: 1.1;
-    margin-bottom: 32px;
-  }
+  /* PROCESS */
+  .process { padding:120px 0; background:var(--deep); }
 
-  .body-text {
-    font-size: 1.05rem;
-    line-height: 1.85;
-    color: #c8c0b0;
-    max-width: 680px;
-  }
+  /* pipeline */
+  .pipeline-wrap { margin-top:56px; width:100%; overflow-x:auto; }
+  .pipeline-wrap svg { display:block; margin:0 auto; }
 
-  .body-text + .body-text {
-    margin-top: 20px;
-  }
-
-  /* ─── CONCEPT ─── */
-  .concept {
-    padding: 120px 0;
-    background: var(--deep);
-    border-top: 1px solid rgba(255,255,255,0.05);
-    border-bottom: 1px solid rgba(255,255,255,0.05);
-  }
-
-  .concept-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 80px;
-    align-items: start;
-    margin-top: 60px;
-  }
-
-  .concept-quote {
-    font-family: 'Abril Fatface', serif;
-    font-size: clamp(1.4rem, 3vw, 2rem);
-    color: var(--cream);
-    line-height: 1.3;
-    border-left: 3px solid var(--red);
-    padding-left: 24px;
-    position: relative;
-  }
-
-  .concept-quote::before {
-    content: '"';
-    font-size: 6rem;
-    color: rgba(192,57,43,0.15);
-    position: absolute;
-    top: -20px;
-    left: -20px;
-    font-family: 'Abril Fatface', serif;
-    line-height: 1;
-  }
-
-  /* ─── VIDEO ─── */
-  .video-section {
-    padding: 120px 0;
-    text-align: center;
-  }
-
-  .video-wrapper {
-    margin-top: 48px;
-    position: relative;
-    display: inline-block;
-    width: 100%;
-    max-width: 800px;
-  }
-
-  .video-frame {
-    width: 100%;
-    aspect-ratio: 16/9;
-    background: #1a1a2a;
-    border: 1px solid rgba(192,57,43,0.3);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .video-frame::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background:
-      repeating-linear-gradient(
-        0deg,
-        var(--stripe) 0px,
-        var(--stripe) 1px,
-        transparent 1px,
-        transparent 4px
-      );
-    pointer-events: none;
-  }
-
-  .video-placeholder {
-    text-align: center;
-    z-index: 1;
-  }
-
-  .play-btn {
-    width: 80px; height: 80px;
-    border: 2px solid var(--red);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 16px;
-    transition: all 0.3s;
-    cursor: pointer;
-  }
-
-  .play-btn:hover {
-    background: var(--red);
-    transform: scale(1.1);
-  }
-
-  .play-btn svg { width: 28px; fill: var(--cream); margin-left: 4px; }
-
-  .video-placeholder p {
-    color: var(--grey);
-    font-family: 'Raleway', sans-serif;
-    font-size: 0.8rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-  }
-
-  .video-corner {
-    position: absolute;
-    width: 20px; height: 20px;
-    border-color: var(--red);
-    border-style: solid;
-  }
-  .video-corner.tl { top: -1px; left: -1px; border-width: 2px 0 0 2px; }
-  .video-corner.tr { top: -1px; right: -1px; border-width: 2px 2px 0 0; }
-  .video-corner.bl { bottom: -1px; left: -1px; border-width: 0 0 2px 2px; }
-  .video-corner.br { bottom: -1px; right: -1px; border-width: 0 2px 2px 0; }
-
-  /* ─── PIPELINE ─── */
-  .pipeline {
-    padding: 120px 0;
-    background: var(--deep);
-  }
-
-  .pipeline-steps {
-    margin-top: 64px;
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-  }
+  /* steps */
+  .steps { margin-top:72px; display:flex; flex-direction:column; }
 
   .step {
-    display: grid;
-    grid-template-columns: 80px 1fr;
-    gap: 32px;
-    padding: 40px 0;
-    border-bottom: 1px solid rgba(255,255,255,0.06);
-    position: relative;
-    transition: all 0.3s;
+    display:grid; grid-template-columns:64px 1fr; gap:28px;
+    padding:36px 0; border-bottom:1px solid var(--border);
+    transition:padding-left .3s;
+  }
+  .step:first-child { border-top:1px solid var(--border); }
+  .step:hover { padding-left:10px; }
+
+  .step-num {
+    font-family:'Abril Fatface',serif; font-size:2.6rem;
+    color:rgba(176,48,32,.2); line-height:1; padding-top:4px; transition:color .3s;
+  }
+  .step:hover .step-num { color:rgba(176,48,32,.5); }
+
+  .step-tags { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:10px; }
+  .tag {
+    font-family:'Raleway',sans-serif; font-size:.58rem; letter-spacing:.15em; text-transform:uppercase;
+    padding:3px 9px; border:1px solid rgba(176,48,32,.35); color:#d46050; border-radius:2px;
   }
 
-  .step:hover {
-    background: rgba(192,57,43,0.03);
-    padding-left: 12px;
-    padding-right: 12px;
-    border-radius: 4px;
-  }
+  .step-title { font-family:'Abril Fatface',serif; font-size:1.25rem; color:var(--cream); margin-bottom:8px; }
+  .step-desc { font-size:.95rem; line-height:1.8; color:#908878; }
 
-  .step:first-child { border-top: 1px solid rgba(255,255,255,0.06); }
-
-  .step-number {
-    font-family: 'Abril Fatface', serif;
-    font-size: 3rem;
-    color: rgba(192,57,43,0.2);
-    line-height: 1;
-    padding-top: 4px;
-    transition: color 0.3s;
-  }
-
-  .step:hover .step-number { color: rgba(192,57,43,0.5); }
-
-  .step-content {}
-
-  .step-tools {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 12px;
-  }
-
-  .tool-tag {
-    font-family: 'Raleway', sans-serif;
-    font-size: 0.65rem;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    padding: 4px 10px;
-    border: 1px solid rgba(192,57,43,0.4);
-    color: var(--red-bright);
-    border-radius: 2px;
-  }
-
-  .step-title {
-    font-family: 'Abril Fatface', serif;
-    font-size: 1.4rem;
-    color: var(--cream);
-    margin-bottom: 10px;
-  }
-
-  .step-desc {
-    font-size: 0.95rem;
-    line-height: 1.75;
-    color: #a0988a;
-  }
-
-  /* ─── CHALLENGE ─── */
-  .challenge {
-    padding: 120px 0;
-    position: relative;
-    overflow: hidden;
-  }
-
+  /* CHALLENGE */
+  .challenge { padding:120px 0; position:relative; overflow:hidden; }
   .challenge::before {
-    content: 'STUCK';
-    position: absolute;
-    font-family: 'Abril Fatface', serif;
-    font-size: 20vw;
-    color: rgba(192,57,43,0.04);
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    white-space: nowrap;
-    pointer-events: none;
+    content:'STUCK'; position:absolute;
+    font-family:'Abril Fatface',serif; font-size:18vw; color:rgba(176,48,32,.03);
+    top:50%; left:50%; transform:translate(-50%,-50%);
+    white-space:nowrap; pointer-events:none; user-select:none;
   }
 
-  .challenge-card {
-    background: rgba(192,57,43,0.06);
-    border: 1px solid rgba(192,57,43,0.2);
-    border-radius: 4px;
-    padding: 48px;
-    margin-top: 48px;
-    position: relative;
+  .chal-card {
+    margin-top:48px; padding:48px;
+    background:rgba(176,48,32,.06); border:1px solid rgba(176,48,32,.2);
+    border-radius:3px; position:relative;
   }
 
-  .challenge-card::before {
-    content: '⚠';
-    position: absolute;
-    top: -16px;
-    left: 48px;
-    background: var(--red);
-    width: 32px; height: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.9rem;
-    border-radius: 2px;
+  .chal-badge {
+    position:absolute; top:-14px; left:48px;
+    background:var(--red); padding:4px 14px;
+    font-family:'Raleway',sans-serif; font-size:.58rem; letter-spacing:.25em; text-transform:uppercase;
+    color:var(--cream); border-radius:2px;
   }
 
-  .challenge-title {
-    font-family: 'Abril Fatface', serif;
-    font-size: 1.6rem;
-    color: var(--cream);
-    margin-bottom: 20px;
-  }
+  .chal-title { font-family:'Abril Fatface',serif; font-size:1.5rem; color:var(--cream); margin-bottom:18px; }
 
-  .challenge-steps {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    margin-top: 28px;
-  }
+  .chal-steps { display:flex; flex-direction:column; gap:14px; margin-top:28px; }
+  .cstep { display:flex; gap:16px; align-items:flex-start; }
+  .cstep-icon { color:var(--red); font-size:1rem; min-width:20px; padding-top:3px; }
+  .cstep-text { font-size:.95rem; line-height:1.75; color:#a09888; }
 
-  .challenge-step {
-    display: flex;
-    align-items: flex-start;
-    gap: 16px;
-  }
-
-  .challenge-step-num {
-    font-family: 'Abril Fatface', serif;
-    color: var(--red);
-    font-size: 1.2rem;
-    min-width: 24px;
-    padding-top: 2px;
-  }
-
-  .challenge-step-text {
-    font-size: 0.95rem;
-    line-height: 1.7;
-    color: #b0a898;
-  }
-
-  /* ─── TOOLS GRID ─── */
-  .tools-section {
-    padding: 120px 0;
-    background: var(--deep);
-  }
+  /* TOOLS */
+  .tools-sec { padding:120px 0; background:var(--deep); }
 
   .tools-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 2px;
-    margin-top: 56px;
-    border: 1px solid rgba(255,255,255,0.06);
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(190px,1fr));
+    gap:2px; margin-top:56px; border:1px solid var(--border);
   }
 
-  .tool-cell {
-    padding: 28px 24px;
-    border: 1px solid rgba(255,255,255,0.04);
-    transition: all 0.3s;
-    position: relative;
-    overflow: hidden;
+  .tcell {
+    padding:26px 22px; border:1px solid var(--border);
+    position:relative; overflow:hidden; transition:background .3s;
   }
-
-  .tool-cell::after {
-    content: '';
-    position: absolute;
-    bottom: 0; left: 0;
-    width: 0; height: 2px;
-    background: var(--red);
-    transition: width 0.3s;
+  .tcell::after {
+    content:''; position:absolute; bottom:0; left:0;
+    width:0; height:1.5px; background:var(--red); transition:width .3s;
   }
+  .tcell:hover { background:rgba(176,48,32,.04); }
+  .tcell:hover::after { width:100%; }
+  .tcell-name { font-family:'Abril Fatface',serif; font-size:1rem; color:var(--cream); margin-bottom:5px; }
+  .tcell-role { font-family:'Raleway',sans-serif; font-size:.7rem; color:var(--muted); line-height:1.5; }
 
-  .tool-cell:hover::after { width: 100%; }
-  .tool-cell:hover { background: rgba(192,57,43,0.05); }
-
-  .tool-cell-name {
-    font-family: 'Abril Fatface', serif;
-    font-size: 1.1rem;
-    color: var(--cream);
-    margin-bottom: 6px;
+  /* TAKEAWAY */
+  .takeaway { padding:120px 0; }
+  .takeaway-body {
+    font-family:'Abril Fatface',serif; font-size:clamp(1.4rem,3vw,2.1rem);
+    color:var(--cream); line-height:1.4; max-width:760px; margin-top:40px;
   }
+  .takeaway-body em { color:var(--red); font-style:italic; }
 
-  .tool-cell-role {
-    font-family: 'Raleway', sans-serif;
-    font-size: 0.72rem;
-    color: var(--grey);
-    letter-spacing: 0.05em;
-    line-height: 1.5;
-  }
+  /* CREDITS */
+  .credits { padding:100px 0 80px; text-align:center; border-top:1px solid var(--border); }
+  .cred-name { font-family:'Raleway',sans-serif; font-size:.7rem; letter-spacing:.3em; text-transform:uppercase; color:var(--muted); margin-bottom:16px; }
+  .cred-title { font-family:'Mountains of Christmas',cursive; font-weight:700; font-size:clamp(2.2rem,7vw,5.5rem); color:var(--cream); line-height:.95; text-shadow:3px 3px 0 var(--red); }
+  .cred-title em { display:block; font-style:italic; color:var(--red); font-size:.75em; }
+  .cred-div { width:48px; height:1px; background:var(--red); margin:32px auto; }
+  .cred-fest { font-family:'Raleway',sans-serif; font-size:.65rem; letter-spacing:.35em; text-transform:uppercase; color:var(--muted); }
 
-  /* ─── CREDITS ─── */
-  .credits {
-    padding: 120px 0 80px;
-    text-align: center;
-  }
+  @keyframes up { from{opacity:0;transform:translateY(28px)} to{opacity:1;transform:translateY(0)} }
+  .reveal { opacity:0; transform:translateY(36px); transition:opacity .8s ease, transform .8s ease; }
+  .reveal.on { opacity:1; transform:translateY(0); }
 
-  .credits-title {
-    font-family: 'Abril Fatface', serif;
-    font-size: clamp(2.5rem, 8vw, 6rem);
-    color: var(--cream);
-    line-height: 1;
-    text-shadow: 3px 3px 0 var(--red);
-    margin-bottom: 8px;
-  }
-
-  .credits-names {
-    font-family: 'Special Elite', cursive;
-    font-size: 1.2rem;
-    color: var(--grey);
-    margin-bottom: 48px;
-    letter-spacing: 0.1em;
-  }
-
-  .credits-divider {
-    width: 60px;
-    height: 1px;
-    background: var(--red);
-    margin: 32px auto;
-  }
-
-  .credits-festival {
-    font-family: 'Raleway', sans-serif;
-    font-size: 0.7rem;
-    letter-spacing: 0.4em;
-    text-transform: uppercase;
-    color: var(--grey);
-  }
-
-  /* ─── DECORATIVE ELEMENTS ─── */
-  .holly {
-    display: inline-block;
-    color: var(--red);
-    margin: 0 8px;
-    animation: sway 3s ease-in-out infinite;
-  }
-
-  @keyframes sway {
-    0%, 100% { transform: rotate(-5deg); }
-    50% { transform: rotate(5deg); }
-  }
-
-  /* ─── ANIMATIONS ─── */
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(30px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  .reveal {
-    opacity: 0;
-    transform: translateY(40px);
-    transition: opacity 0.8s ease, transform 0.8s ease;
-  }
-
-  .reveal.visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  /* ─── DECORATIVE SPIDERS / CURLS ─── */
-  .deco-line {
-    display: block;
-    width: 100%;
-    height: 1px;
-    background: linear-gradient(to right, transparent, rgba(192,57,43,0.3), transparent);
-    margin: 0;
-  }
-
-  /* ─── MOBILE ─── */
-  @media (max-width: 640px) {
-    .concept-grid { grid-template-columns: 1fr; gap: 40px; }
-    .step { grid-template-columns: 48px 1fr; gap: 16px; }
-    .challenge-card { padding: 32px 24px; }
-    .hero-meta { flex-direction: column; gap: 20px; }
+  @media(max-width:640px){
+    .idea-grid { grid-template-columns:1fr; gap:40px; }
+    .step { grid-template-columns:44px 1fr; gap:14px; }
+    .chal-card,.ai-card { padding:28px 22px; }
   }
 </style>
 </head>
 <body>
 
-<div class="cursor" id="cursor"></div>
+<div class="cursor" id="cur"></div>
+<div class="snow" id="snow"></div>
 
-<!-- Snowfall -->
-<div class="snow-container" id="snow"></div>
-
-<!-- ─── HERO ─── -->
+<!-- HERO -->
 <section class="hero">
-  <p class="hero-eyebrow"><span class="holly">✦</span> AIF 2026 — Advertising <span class="holly">✦</span></p>
-  <h1 class="hero-title">
-    Real Taste,
-    <em>No Acting Required.</em>
-  </h1>
-  <p class="hero-sub">A spec beer advertisement — AI-assisted production</p>
-
-  <div class="hero-meta">
-    <div class="hero-meta-item">
-      <span class="label">Team</span>
-      <span class="value">Mia & Ingrid</span>
-    </div>
-    <div class="hero-meta-item">
-      <span class="label">Duration</span>
-      <span class="value">One Week</span>
-    </div>
-    <div class="hero-meta-item">
-      <span class="label">Style</span>
-      <span class="value">Clay Stop-Motion</span>
-    </div>
-    <div class="hero-meta-item">
-      <span class="label">Category</span>
-      <span class="value">Advertising</span>
-    </div>
+  <p class="eyebrow">✦ AIF 2026 — Advertising ✦</p>
+  <h1 class="hero-title">Real Taste,<em>No Acting Required.</em></h1>
+  <p class="hero-sub">A spec AI beer advertisement — Tumbled Raven, 2026</p>
+  <div class="hero-chips">
+    <span class="chip">Clay Stop-Motion</span>
+    <span class="chip">Full AI Pipeline</span>
+    <span class="chip">Advertising</span>
   </div>
+  <div class="scroll-hint"><span>Scroll</span><div class="scroll-line"></div></div>
+</section>
 
-  <div class="scroll-hint">
-    <span>Scroll</span>
-    <div class="scroll-line"></div>
+<div class="rule"></div>
+
+<!-- VIDEO -->
+<section class="video-sec">
+  <div class="wrap">
+    <span class="sec-label reveal">The Film</span>
+    <h2 class="sec-title reveal">Watch the Ad</h2>
+    <div class="vframe reveal">
+      <div class="vcorner tl"></div><div class="vcorner tr"></div>
+      <div class="vcorner bl"></div><div class="vcorner br"></div>
+      <video controls style="width:100%;height:100%;object-fit:contain;position:absolute;top:0;left:0;">
+        <source src="ref/santabeer20260426c.mp4" type="video/mp4">
+      </video>
+    </div>
   </div>
 </section>
 
-<span class="deco-line"></span>
+<div class="rule"></div>
 
-<!-- ─── VIDEO ─── -->
-<section class="video-section">
-  <div class="container">
-    <span class="section-label reveal">The Film</span>
-    <h2 class="section-title reveal">Watch the Ad</h2>
+<!-- THE IDEA -->
+<section class="idea">
+  <div class="wrap">
+    <span class="sec-label reveal">The Idea</span>
+    <h2 class="sec-title reveal">A Joke Hidden Inside an Ad<br>Hidden Inside a Joke.</h2>
+    <div class="idea-grid">
+      <div class="pullquote reveal">One pretending to be the other. Both exhausted by the performance.</div>
+      <div>
+        <p class="prose reveal">We were making an ad for a holiday beer — a product that sits at the center of celebration, yet carries awkward cultural baggage: the seasonal guilt of indulgence. People love beer, but it's often framed as something to earn, burn off, or feel guilty about. Instead of avoiding that association, we reversed it.</p>
+        <p class="prose reveal">The concept builds on a familiar but rarely questioned convention in weight-loss advertising: "before and after" transformations are often portrayed by two different actors. We realized the characters from <em>The Nightmare Before Christmas</em> were a perfect fit — the film is literally about Jack Skellington kidnapping Santa Claus and impersonating him. A before-and-after identity swap that maps directly onto fake transformations and stolen roles.</p>
+        <p class="prose reveal">The reveal shifts the narrative from fantasy to reality: two exhausted actors, still in costume, sharing a beer in a parking lot. Beer is no longer about image or discipline — it's about what people actually love about it: sharing, joy, and the freedom to be yourself.</p>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <div class="video-wrapper reveal">
-      <div class="video-frame" id="videoFrame">
-        <div class="video-corner tl"></div>
-        <div class="video-corner tr"></div>
-        <div class="video-corner bl"></div>
-        <div class="video-corner br"></div>
-        <div class="video-placeholder">
-          <div class="play-btn" onclick="alert('Replace this with your video embed link')">
-            <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-          </div>
-          <p>Insert video link here</p>
+<div class="rule"></div>
+
+<!-- AI IN ADVERTISING -->
+<section class="ai-sec">
+  <div class="wrap">
+    <span class="sec-label reveal">AI in Advertising</span>
+    <h2 class="sec-title reveal">AI Deployed in Service<br>of a Strong Idea.</h2>
+    <div class="ai-card reveal">
+      <div class="ai-card-title">The Coca-Cola Problem</div>
+      <p class="prose">When Coca-Cola used AI to remake its beloved 1995 Holidays Are Coming Christmas ad, the backlash was swift — critics called it soulless, with many noting the irony of the "Real Magic" tagline. What was missing was storytelling: AI-generated imagery snapped together with a familiar jingle, dead on arrival. The lesson isn't that AI doesn't belong in advertising — it's that AI deployed <em>instead of</em> a story produces nothing. AI deployed <em>in service of</em> a strong idea is something else entirely.</p>
+    </div>
+    <p class="prose reveal" style="margin-top:40px">Think of how AI has transformed software engineering — not by replacing developers, but by handling scaffolding so they can focus on architecture and judgment. The same shift applies to creative production. Stop-motion is one of advertising's most expensive visual styles, routinely cut from budgets before the conversation even starts. AI changed that equation: by locking the clay stop-motion aesthetic early in ComfyUI and Nano Banana, we could generate consistent, on-style visuals across the full production without physical puppets or sets.</p>
+    <p class="prose reveal">The style we chose wasn't a budget compromise — it was the best fit for the idea, and the most natural home for the dark holiday whimsy we were drawing from. Since <em>The Nightmare Before Christmas</em> is itself a stop-motion classic, the visual world already existed. We were simply moving into it. AI didn't make this project cheaper. <em>It made the right choice possible.</em></p>
+  </div>
+</section>
+
+<div class="rule"></div>
+
+<!-- PROCESS -->
+<section class="process">
+  <div class="wrap">
+    <span class="sec-label reveal">The Process</span>
+    <h2 class="sec-title reveal">How We Made It</h2>
+
+    <!-- PIPELINE DIAGRAM -->
+    <div class="pipeline-wrap reveal">
+      <svg width="100%" viewBox="0 0 900 220" xmlns="http://www.w3.org/2000/svg" style="max-width:900px;min-width:600px">
+        <defs>
+          <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+            <path d="M2 1L8 5L2 9" fill="none" stroke="#b03020" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </marker>
+        </defs>
+
+        <!-- timeline spine -->
+        <line x1="65" y1="100" x2="835" y2="100" stroke="#2a1808" stroke-width="0.5"/>
+
+        <!-- week label -->
+        <text x="450" y="22" font-family="Georgia,serif" font-size="8" fill="#3a2810" text-anchor="middle" letter-spacing="3">— ONE WEEK —</text>
+        <line x1="55" y1="30" x2="845" y2="30" stroke="#2a1808" stroke-width="0.5"/>
+
+        <!-- BOX 1: Concept -->
+        <rect x="10" y="58" width="110" height="84" rx="3" fill="#1a1208" stroke="#4a2010" stroke-width="0.5"/>
+        <text x="65" y="82" font-family="Georgia,serif" font-size="9" fill="#c8302a" text-anchor="middle" letter-spacing="1">CONCEPT</text>
+        <line x1="22" y1="88" x2="108" y2="88" stroke="#3a2010" stroke-width="0.5"/>
+        <text x="65" y="104" font-family="Georgia,serif" font-size="8" fill="#7a6040" text-anchor="middle">Script &amp;</text>
+        <text x="65" y="116" font-family="Georgia,serif" font-size="8" fill="#7a6040" text-anchor="middle">Storyboard</text>
+        <text x="65" y="132" font-family="'Courier New',monospace" font-size="7" fill="#5a3a18" text-anchor="middle">TapNow</text>
+
+        <!-- arrow 1→2 -->
+        <line x1="122" y1="100" x2="148" y2="100" stroke="#b03020" stroke-width="1" marker-end="url(#arr)"/>
+
+        <!-- BOX 2: Style -->
+        <rect x="150" y="58" width="120" height="84" rx="3" fill="#1a1208" stroke="#4a2010" stroke-width="0.5"/>
+        <text x="210" y="82" font-family="Georgia,serif" font-size="9" fill="#c8302a" text-anchor="middle" letter-spacing="1">STYLE LOCK</text>
+        <line x1="162" y1="88" x2="258" y2="88" stroke="#3a2010" stroke-width="0.5"/>
+        <text x="210" y="104" font-family="Georgia,serif" font-size="8" fill="#7a6040" text-anchor="middle">Clay aesthetic</text>
+        <text x="210" y="116" font-family="Georgia,serif" font-size="8" fill="#7a6040" text-anchor="middle">&amp; characters</text>
+        <text x="210" y="132" font-family="'Courier New',monospace" font-size="7" fill="#5a3a18" text-anchor="middle">ComfyUI · Nano Banana</text>
+
+        <!-- arrow 2→3 -->
+        <line x1="272" y1="100" x2="298" y2="100" stroke="#b03020" stroke-width="1" marker-end="url(#arr)"/>
+
+        <!-- BOX 3: Prompts -->
+        <rect x="300" y="58" width="110" height="84" rx="3" fill="#1a1208" stroke="#4a2010" stroke-width="0.5"/>
+        <text x="355" y="82" font-family="Georgia,serif" font-size="9" fill="#c8302a" text-anchor="middle" letter-spacing="1">PROMPTS</text>
+        <line x1="312" y1="88" x2="398" y2="88" stroke="#3a2010" stroke-width="0.5"/>
+        <text x="355" y="104" font-family="Georgia,serif" font-size="8" fill="#7a6040" text-anchor="middle">Shot descriptions</text>
+        <text x="355" y="116" font-family="Georgia,serif" font-size="8" fill="#7a6040" text-anchor="middle">&amp; dialogue</text>
+        <text x="355" y="132" font-family="'Courier New',monospace" font-size="7" fill="#5a3a18" text-anchor="middle">Claude · Gemini</text>
+
+        <!-- arrow 3→4 -->
+        <line x1="412" y1="100" x2="438" y2="100" stroke="#b03020" stroke-width="1" marker-end="url(#arr)"/>
+
+        <!-- BOX 4: Video Gen -->
+        <rect x="440" y="58" width="130" height="84" rx="3" fill="#1a1208" stroke="#4a2010" stroke-width="0.5"/>
+        <text x="505" y="82" font-family="Georgia,serif" font-size="9" fill="#c8302a" text-anchor="middle" letter-spacing="1">VIDEO GEN</text>
+        <line x1="452" y1="88" x2="558" y2="88" stroke="#3a2010" stroke-width="0.5"/>
+        <text x="505" y="104" font-family="Georgia,serif" font-size="8" fill="#7a6040" text-anchor="middle">Keyframe → motion</text>
+        <text x="505" y="116" font-family="Georgia,serif" font-size="8" fill="#7a6040" text-anchor="middle">pipeline</text>
+        <text x="505" y="132" font-family="'Courier New',monospace" font-size="7" fill="#5a3a18" text-anchor="middle">Kling · Runway Gen-4</text>
+
+        <!-- chimney annotation -->
+        <line x1="505" y1="142" x2="505" y2="168" stroke="#4a2010" stroke-width="0.5" stroke-dasharray="3 2"/>
+        <rect x="408" y="168" width="194" height="26" rx="2" fill="none" stroke="#4a2010" stroke-width="0.5" stroke-dasharray="3 2"/>
+        <text x="505" y="184" font-family="'Courier New',monospace" font-size="7" fill="#7a5030" text-anchor="middle">⚠ Chimney: Photoshop hybrid</text>
+
+        <!-- arrow 4→5 -->
+        <line x1="572" y1="100" x2="598" y2="100" stroke="#b03020" stroke-width="1" marker-end="url(#arr)"/>
+
+        <!-- BOX 5: Audio -->
+        <rect x="600" y="58" width="110" height="84" rx="3" fill="#1a1208" stroke="#4a2010" stroke-width="0.5"/>
+        <text x="655" y="82" font-family="Georgia,serif" font-size="9" fill="#c8302a" text-anchor="middle" letter-spacing="1">AUDIO</text>
+        <line x1="612" y1="88" x2="698" y2="88" stroke="#3a2010" stroke-width="0.5"/>
+        <text x="655" y="104" font-family="Georgia,serif" font-size="8" fill="#7a6040" text-anchor="middle">Voices &amp;</text>
+        <text x="655" y="116" font-family="Georgia,serif" font-size="8" fill="#7a6040" text-anchor="middle">ambient sound</text>
+        <text x="655" y="132" font-family="'Courier New',monospace" font-size="7" fill="#5a3a18" text-anchor="middle">ElevenLabs</text>
+
+        <!-- arrow 5→6 -->
+        <line x1="712" y1="100" x2="738" y2="100" stroke="#b03020" stroke-width="1" marker-end="url(#arr)"/>
+
+        <!-- BOX 6: Edit -->
+        <rect x="740" y="58" width="110" height="84" rx="3" fill="#1a1208" stroke="#4a2010" stroke-width="0.5"/>
+        <text x="795" y="82" font-family="Georgia,serif" font-size="9" fill="#c8302a" text-anchor="middle" letter-spacing="1">EDIT</text>
+        <line x1="752" y1="88" x2="838" y2="88" stroke="#3a2010" stroke-width="0.5"/>
+        <text x="795" y="104" font-family="Georgia,serif" font-size="8" fill="#7a6040" text-anchor="middle">Assembly &amp;</text>
+        <text x="795" y="116" font-family="Georgia,serif" font-size="8" fill="#7a6040" text-anchor="middle">final polish</text>
+        <text x="795" y="132" font-family="'Courier New',monospace" font-size="7" fill="#5a3a18" text-anchor="middle">Premiere Pro</text>
+      </svg>
+    </div>
+
+    <!-- STEPS -->
+    <div class="steps">
+      <div class="step reveal">
+        <div class="step-num">01</div>
+        <div>
+          <div class="step-tags"><span class="tag">TapNow</span></div>
+          <div class="step-title">Concept & Storyboard</div>
+          <p class="step-desc">One evening of brainstorming locked in the narrative structure, the meta-twist, and the final tagline. Storyboarding in TapNow let us plan shot compositions and camera logic before committing to any generation — preventing costly detours later.</p>
         </div>
       </div>
-    </div>
-  </div>
-</section>
-
-<span class="deco-line"></span>
-
-<!-- ─── CONCEPT ─── -->
-<section class="concept">
-  <div class="container">
-    <span class="section-label reveal">The Idea</span>
-    <h2 class="section-title reveal">A Joke Hidden Inside an Ad<br>Hidden Inside a Joke.</h2>
-
-    <div class="concept-grid">
-      <div class="reveal">
-        <div class="concept-quote">
-          Weight-loss brands hire two different people to fake "before and after." We made that the punchline.
-        </div>
-      </div>
-      <div class="reveal">
-        <p class="body-text">
-          The concept came from a simple cultural observation: pharmaceutical and wellness ads routinely cast two actors to manufacture transformation — a quiet deception dressed up as inspiration.
-        </p>
-        <p class="body-text" style="margin-top:20px;">
-          We pushed that convention to its most absurd extreme — Santa Claus, of all people, getting an Ozempic glow-up — then pulled the curtain back. The real punchline isn't the slim Santa. It's two exhausted actors sharing a cold beer in a parking lot after the shoot. <em>Good products don't need performance. Genuine happiness doesn't either.</em>
-        </p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<span class="deco-line"></span>
-
-<!-- ─── PIPELINE ─── -->
-<section class="pipeline">
-  <div class="container">
-    <span class="section-label reveal">How We Made It</span>
-    <h2 class="section-title reveal">The Pipeline</h2>
-
-    <div class="pipeline-steps">
 
       <div class="step reveal">
-        <div class="step-number">01</div>
-        <div class="step-content">
-          <div class="step-tools">
-            <span class="tool-tag">TapNow</span>
-          </div>
-          <div class="step-title">Storyboard & Shot Planning</div>
-          <p class="step-desc">Before generating a single frame, we planned the full shot list in TapNow — compositions, camera logic, timing of the meta-reveal. Locking the narrative structure early prevented costly generation detours later.</p>
-        </div>
-      </div>
-
-      <div class="step reveal">
-        <div class="step-number">02</div>
-        <div class="step-content">
-          <div class="step-tools">
-            <span class="tool-tag">ComfyUI</span>
-            <span class="tool-tag">Nano Banana</span>
-          </div>
+        <div class="step-num">02</div>
+        <div>
+          <div class="step-tags"><span class="tag">ComfyUI</span><span class="tag">Nano Banana</span></div>
           <div class="step-title">Style Lock & Character Design</div>
-          <p class="step-desc">We established a clay stop-motion aesthetic — warm, handmade, slightly uncanny — as a deliberate counterpoint to the ad's cold irony. Locking character references in ComfyUI and Nano Banana before video generation was essential for consistency across every shot.</p>
+          <p class="step-desc">We established a clay stop-motion aesthetic as a deliberate stylistic choice — handmade and stylised, counteracting the cold irony of the satire. Since The Nightmare Before Christmas is itself a stop-motion classic, the visual world already existed. We were simply moving into it. Locking character references early was essential for consistency across every shot.</p>
         </div>
       </div>
 
       <div class="step reveal">
-        <div class="step-number">03</div>
-        <div class="step-content">
-          <div class="step-tools">
-            <span class="tool-tag">Claude</span>
-            <span class="tool-tag">Gemini</span>
-          </div>
-          <div class="step-title">Script & Prompt Engineering</div>
-          <p class="step-desc">Claude and Gemini were used to refine shot descriptions, sharpen prompt language for each scene, and iterate on the final punchline until it landed without over-explaining. The tagline — <em>Real Taste, No Acting Required</em> — went through multiple passes before it felt inevitable.</p>
+        <div class="step-num">03</div>
+        <div>
+          <div class="step-tags"><span class="tag">Claude</span><span class="tag">Gemini</span></div>
+          <div class="step-title">Prompt Engineering</div>
+          <p class="step-desc">Claude and Gemini refined shot descriptions, tightened prompt language for each scene, and iterated on the final punchline until it landed without over-explaining. The tagline — Real Taste, No Acting Required — went through multiple passes before it felt inevitable.</p>
         </div>
       </div>
 
       <div class="step reveal">
-        <div class="step-number">04</div>
-        <div class="step-content">
-          <div class="step-tools">
-            <span class="tool-tag">Nano Banana</span>
-            <span class="tool-tag">Kling</span>
-            <span class="tool-tag">Runway Gen-4</span>
-          </div>
+        <div class="step-num">04</div>
+        <div>
+          <div class="step-tags"><span class="tag">Nano Banana</span><span class="tag">Kling</span><span class="tag">Runway Gen-4</span></div>
           <div class="step-title">Keyframe-First Video Generation</div>
-          <p class="step-desc">Rather than prompting video cold, we generated key frames in Nano Banana first, then iterated to produce refined intermediate frames. These served as anchors for Kling and Runway — which generated full motion sequences between them. This approach gave us significantly more control over character continuity and motion than starting from text alone.</p>
+          <p class="step-desc">Rather than prompting video cold, we generated key frames in Nano Banana first, then iterated to produce refined intermediate frames. These served as anchors for Kling and Runway, giving us significantly more control over character continuity and motion than starting from text alone.</p>
         </div>
       </div>
 
       <div class="step reveal">
-        <div class="step-number">05</div>
-        <div class="step-content">
-          <div class="step-tools">
-            <span class="tool-tag">ElevenLabs</span>
-            <span class="tool-tag">Premiere Pro</span>
-          </div>
+        <div class="step-num">05</div>
+        <div>
+          <div class="step-tags"><span class="tag">ElevenLabs</span><span class="tag">Premiere Pro</span></div>
           <div class="step-title">Audio & Final Edit</div>
-          <p class="step-desc">A rough cut was assembled first, then ElevenLabs generated character voices and key ambient audio against that edit. Final integration and polish happened in Premiere Pro — with the rough cut informing every audio decision rather than working the other way around.</p>
+          <p class="step-desc">A rough cut was assembled first, then ElevenLabs generated character voices and key ambient audio against that edit. Final integration and polish happened in Premiere Pro — with the rough cut informing every audio decision rather than the other way around.</p>
         </div>
       </div>
-
     </div>
   </div>
 </section>
 
-<span class="deco-line"></span>
+<div class="rule"></div>
 
-<!-- ─── CHALLENGE ─── -->
+<!-- CHALLENGE -->
 <section class="challenge">
-  <div class="container">
-    <span class="section-label reveal">The Hard Part</span>
-    <h2 class="section-title reveal">When Santa Gets Stuck,<br>So Does the Prompt.</h2>
-
-    <div class="challenge-card reveal">
-      <div class="challenge-title">The Chimney Shot</div>
-      <p class="body-text">
-        The cross-section shot of Santa wedged in the chimney — the visual anchor of the entire ad's premise — refused to generate cleanly. Every prompt combination produced something wrong: wrong angle, wrong proportions, missing the black comedy of the situation.
-      </p>
-
-      <div class="challenge-steps">
-        <div class="challenge-step">
-          <span class="challenge-step-num">✕</span>
-          <p class="challenge-step-text">Attempted direct text-to-video prompting across multiple iterations — no prompt produced a usable cross-section view.</p>
-        </div>
-        <div class="challenge-step">
-          <span class="challenge-step-num">→</span>
-          <p class="challenge-step-text">Built a precise reference illustration in Photoshop — a hybrid human-AI workflow, drawing the exact geometry and proportions manually.</p>
-        </div>
-        <div class="challenge-step">
-          <span class="challenge-step-num">✓</span>
-          <p class="challenge-step-text">Used the Photoshop illustration as a generation anchor. The result became one of the most visually distinctive frames in the piece.</p>
-        </div>
+  <div class="wrap">
+    <span class="sec-label reveal">The Hard Part</span>
+    <h2 class="sec-title reveal">When Santa Gets Stuck,<br>So Does the Prompt.</h2>
+    <div class="chal-card reveal">
+      <div class="chal-badge">Problem</div>
+      <div class="chal-title">The Chimney Shot</div>
+      <p class="prose">The cross-section shot of Santa wedged in the chimney — the visual anchor of the entire ad's premise — refused to generate cleanly. Every prompt combination produced something wrong: wrong angle, wrong proportions, missing the black comedy of the situation.</p>
+      <div class="chal-steps">
+        <div class="cstep"><span class="cstep-icon">✕</span><p class="cstep-text">Attempted direct text-to-video prompting across multiple iterations — no prompt produced a usable cross-section view.</p></div>
+        <div class="cstep"><span class="cstep-icon">→</span><p class="cstep-text">Built a precise reference illustration in Photoshop — a hybrid human-AI workflow, drawing the exact geometry and proportions manually.</p></div>
+        <div class="cstep"><span class="cstep-icon">✓</span><p class="cstep-text">Used the Photoshop illustration as a generation anchor. It became one of the most visually distinctive frames in the piece.</p></div>
       </div>
     </div>
   </div>
 </section>
 
-<span class="deco-line"></span>
+<div class="rule"></div>
 
-<!-- ─── TOOLS ─── -->
-<section class="tools-section">
-  <div class="container">
-    <span class="section-label reveal">Full Stack</span>
-    <h2 class="section-title reveal">Tools Used</h2>
-
+<!-- TOOLS -->
+<section class="tools-sec">
+  <div class="wrap">
+    <span class="sec-label reveal">Full Stack</span>
+    <h2 class="sec-title reveal">Tools Used</h2>
     <div class="tools-grid reveal">
-      <div class="tool-cell">
-        <div class="tool-cell-name">TapNow</div>
-        <div class="tool-cell-role">AI storyboarding & shot planning</div>
-      </div>
-      <div class="tool-cell">
-        <div class="tool-cell-name">ComfyUI</div>
-        <div class="tool-cell-role">Style development & visual reference</div>
-      </div>
-      <div class="tool-cell">
-        <div class="tool-cell-name">Nano Banana</div>
-        <div class="tool-cell-role">Character design & keyframe generation</div>
-      </div>
-      <div class="tool-cell">
-        <div class="tool-cell-name">Claude</div>
-        <div class="tool-cell-role">Script refinement & prompt engineering</div>
-      </div>
-      <div class="tool-cell">
-        <div class="tool-cell-name">Gemini</div>
-        <div class="tool-cell-role">Concept iteration & dialogue</div>
-      </div>
-      <div class="tool-cell">
-        <div class="tool-cell-name">Kling</div>
-        <div class="tool-cell-role">Video generation from reference frames</div>
-      </div>
-      <div class="tool-cell">
-        <div class="tool-cell-name">Runway Gen-4</div>
-        <div class="tool-cell-role">Video generation & motion sequences</div>
-      </div>
-      <div class="tool-cell">
-        <div class="tool-cell-name">ElevenLabs</div>
-        <div class="tool-cell-role">Voice synthesis & ambient audio</div>
-      </div>
-      <div class="tool-cell">
-        <div class="tool-cell-name">Photoshop</div>
-        <div class="tool-cell-role">Hybrid problem-solving & reference art</div>
-      </div>
-      <div class="tool-cell">
-        <div class="tool-cell-name">Premiere Pro</div>
-        <div class="tool-cell-role">Assembly, rough cut & final edit</div>
-      </div>
+      <div class="tcell"><div class="tcell-name">TapNow</div><div class="tcell-role">AI storyboarding & shot planning</div></div>
+      <div class="tcell"><div class="tcell-name">ComfyUI</div><div class="tcell-role">Style development & visual reference</div></div>
+      <div class="tcell"><div class="tcell-name">Nano Banana</div><div class="tcell-role">Character design & keyframe generation</div></div>
+      <div class="tcell"><div class="tcell-name">Claude</div><div class="tcell-role">Script refinement & prompt engineering</div></div>
+      <div class="tcell"><div class="tcell-name">Gemini</div><div class="tcell-role">Concept iteration & dialogue</div></div>
+      <div class="tcell"><div class="tcell-name">Kling</div><div class="tcell-role">Video generation from reference frames</div></div>
+      <div class="tcell"><div class="tcell-name">Runway Gen-4</div><div class="tcell-role">Video generation & motion sequences</div></div>
+      <div class="tcell"><div class="tcell-name">ElevenLabs</div><div class="tcell-role">Voice synthesis & ambient audio</div></div>
+      <div class="tcell"><div class="tcell-name">Photoshop</div><div class="tcell-role">Hybrid problem-solving & reference art</div></div>
+      <div class="tcell"><div class="tcell-name">Premiere Pro</div><div class="tcell-role">Assembly, rough cut & final edit</div></div>
     </div>
   </div>
 </section>
 
-<span class="deco-line"></span>
+<div class="rule"></div>
 
-<!-- ─── CREDITS ─── -->
-<section class="credits">
-  <div class="container">
-    <div class="reveal">
-      <p class="credits-names">Mia & Ingrid</p>
-      <h2 class="credits-title">Real Taste,<br>No Acting Required.</h2>
-      <div class="credits-divider"></div>
-      <p class="credits-festival">Runway AI Festival 2026 — Advertising Category</p>
+<!-- TAKEAWAY -->
+<section class="takeaway">
+  <div class="wrap">
+    <span class="sec-label reveal">The Takeaway</span>
+    <h2 class="sec-title reveal">Refusing to Compromise.</h2>
+    <div class="takeaway-body reveal">
+      The best argument for AI in advertising isn't efficiency — it's <em>creative possibility.</em> A strong idea came first, and AI served it at every stage: not by replacing creative judgment, but by removing the constraints that would have forced us to compromise it. We got the visual style the concept deserved, the production quality a spec project couldn't otherwise afford, and the freedom to follow the idea wherever it needed to go. The stop-motion world, the character consistency, the hybrid human-AI problem-solving — none of it was about cutting corners. <em>It was about refusing to.</em>
     </div>
+  </div>
+</section>
+
+<!-- CREDITS -->
+<section class="credits">
+  <div class="wrap">
+    <p class="cred-name reveal">Tumbled Raven: Mia &amp; Ingrid</p>
+    <h2 class="cred-title reveal">Real Taste,<em>No Acting Required.</em></h2>
+    <div class="cred-div"></div>
+    <p class="cred-fest reveal">Runway AI Festival 2026 — Advertising Category</p>
   </div>
 </section>
 
 <script>
-  // Cursor
-  const cursor = document.getElementById('cursor');
+  const cur = document.getElementById('cur');
   document.addEventListener('mousemove', e => {
-    cursor.style.left = e.clientX + 'px';
-    cursor.style.top = e.clientY + 'px';
+    cur.style.left = e.clientX + 'px';
+    cur.style.top = e.clientY + 'px';
   });
 
-  // Snowfall
   const snow = document.getElementById('snow');
-  const chars = ['❄', '❅', '❆', '·', '•'];
-  for (let i = 0; i < 40; i++) {
-    const flake = document.createElement('span');
-    flake.className = 'snowflake';
-    flake.textContent = chars[Math.floor(Math.random() * chars.length)];
-    flake.style.left = Math.random() * 100 + 'vw';
-    flake.style.fontSize = (0.6 + Math.random() * 1.2) + 'em';
-    flake.style.opacity = 0.2 + Math.random() * 0.5;
-    flake.style.animationDuration = (6 + Math.random() * 14) + 's';
-    flake.style.animationDelay = (-Math.random() * 20) + 's';
-    snow.appendChild(flake);
-  }
+  ['❄','❅','❆','·','•'].forEach(ch => {
+    for(let j=0;j<8;j++){
+      const f = document.createElement('span');
+      f.className='flake'; f.textContent=ch;
+      f.style.left = Math.random()*100+'vw';
+      f.style.fontSize = (.5+Math.random())+'em';
+      f.style.opacity = .12+Math.random()*.3;
+      f.style.animationDuration = (7+Math.random()*16)+'s';
+      f.style.animationDelay = (-Math.random()*20)+'s';
+      snow.appendChild(f);
+    }
+  });
 
-  // Scroll reveal
-  const reveals = document.querySelectorAll('.reveal');
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach((entry, i) => {
-      if (entry.isIntersecting) {
-        setTimeout(() => entry.target.classList.add('visible'), i * 80);
-        observer.unobserve(entry.target);
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach((e,i) => {
+      if(e.isIntersecting){
+        setTimeout(()=>e.target.classList.add('on'), i*60);
+        obs.unobserve(e.target);
       }
     });
-  }, { threshold: 0.1 });
-  reveals.forEach(el => observer.observe(el));
+  },{threshold:.08});
+  document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
 </script>
 </body>
 </html>
